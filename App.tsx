@@ -5,6 +5,7 @@
  * @format
  */
 
+import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
@@ -24,6 +25,9 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import AppNavigation from './src/navigation/AppNavigation';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {ThemeProvider} from './src/theme/ThemeProvider';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -63,7 +67,13 @@ function App(): React.JSX.Element {
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <AppNavigation />
+      </ThemeProvider>
+    </SafeAreaProvider>
+
+    /*  <SafeAreaView style={backgroundStyle}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
@@ -92,7 +102,7 @@ function App(): React.JSX.Element {
           <LearnMoreLinks />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </SafeAreaView> */
   );
 }
 
