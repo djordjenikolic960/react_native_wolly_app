@@ -18,7 +18,6 @@ const useTradingStore = create<TradingState>(set => ({
     set({loading: true, error: null});
     try {
       const response = await fetchCryptoCurrencie(id);
-      console.log('ovo je response:' , response.name);
       const crypto: CryptoCurrency = ({
         id: response.id,
         name: response.name,
@@ -26,7 +25,6 @@ const useTradingStore = create<TradingState>(set => ({
         valueOfOne: response.valueOfOne,
         abbrevation: response.abbreviation,
       });
-      console.log('item is: ', crypto);
       set({crypto: crypto, loading: false});
     } catch (error) {
       throw new Error();

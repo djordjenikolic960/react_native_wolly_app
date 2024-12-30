@@ -44,7 +44,6 @@ class ApiClient {
 
   // GET method
   async get<T>(endpoint: string, params?: Record<string, any>): Promise<T> {
-    console.log(endpoint);
     const response = await this.client.get(endpoint, {params});
     return response.data;
   }

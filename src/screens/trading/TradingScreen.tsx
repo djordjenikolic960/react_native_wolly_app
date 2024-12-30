@@ -33,6 +33,14 @@ const TradingScreen = ({route}: {route: TradingScreenRouteProp}) => {
             style={styles.header}>{`$ ${crypto?.valueOfOne.toString()}`}</Text>
 
           <Text style={styles.subtitle}>{`1.00 ${crypto?.abbrevation}`}</Text>
+
+          <View
+            style={{
+              width: '90%',
+              borderColor: '#000',
+              borderWidth: 1,
+              height: 40,
+            }}></View>
         </View>
       </View>
     </SafeAreaView>
