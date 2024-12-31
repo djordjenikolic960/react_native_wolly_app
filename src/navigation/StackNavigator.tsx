@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import LoginScreen from '../screens/login/LoginScreen';
 import BottomTabNavigator from './BottomTabNavigator';
 import {RootStackParamList} from './Types';
-import CreateAccountScreen from '../screens/create-account/CreateAccountScreen';
 import TokenManager from '../utils/TokenManager';
 import {ActivityIndicator, View} from 'react-native';
-import TradingScreen from '../screens/trading/TradingScreen';
+import LoginScreen from '../features/login/presentation/screens/LoginScreen';
+import CreateAccountScreen from '../features/create_user/presentation/screens/CreateAccountScreen';
+import TradingScreen from '../features/trading/presentation/screens/TradingScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
