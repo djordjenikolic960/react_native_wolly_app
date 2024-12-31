@@ -1,12 +1,12 @@
 import React from 'react';
-import DashboardScreen from '../screens/dashboard/DashboardScreen';
-import ProfileScreen from '../screens/profile/Profile';
-import SettingsScreen from '../screens/settings/Settings';
+import DashboardScreen from '../features/dashboard/presentation/screens/DashboardScreen';
+import ProfileScreen from '../features/profile/Profile';
+import SettingsScreen from '../features/settings/Settings';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import CryptoListScreen from '../screens/crypto-list/CryptoListScreen';
 import BottomNavigationIcon from '../components/BottomNavigationIcon';
 import {Images} from '../assets';
 import {useTheme} from '../theme/ThemeProvider';
+import CryptoMarketListScreen from '../features/crypto_market_list/presentation/screens/CryptoMarketListScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -41,7 +41,7 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="CryptoList"
-        component={CryptoListScreen}
+        component={CryptoMarketListScreen}
         options={{
           headerTitle: 'Crypto List',
 
