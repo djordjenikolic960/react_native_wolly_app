@@ -1,10 +1,7 @@
 import {create} from 'zustand';
 import {BaseError} from '../../../../errors/BaseError';
 import {Cryptocurrency} from '../../domain/model/Cryptocurrency';
-import {CryptocurrencyMapper} from '../../data/mapper/CryptocurrencyMapper';
-import {CryptoRepositoryImpl} from '../../data/repository/CryptoRepositoryImpl';
-import {CryptoService} from '../../data/service/CryptoService';
-import {FetchCryptosUseCase} from '../../domain/usecase/FetchCryptosUseCase';
+import {cryptoMarketContainer} from '../../di/CryptoMarketDependecyContainer';
 
 type State = {
   loading: boolean;
@@ -16,10 +13,7 @@ type Actions = {
   fetchCryptoCurrencies: () => Promise<void>;
 };
 
-const cryptoMapper = new CryptocurrencyMapper();
-const cryptoService = new CryptoService();
-const cryptoRepository = new CryptoRepositoryImpl(cryptoService, cryptoMapper);
-const fetchCryptosUseCase = new FetchCryptosUseCase(cryptoRepository);
+const fetchCryptosUseCase = cryptoMarketContainer.getFetchCryptosUseCase();
 
 const useCryptoMarketListStore = create<State & Actions>(set => ({
   cryptos: [],

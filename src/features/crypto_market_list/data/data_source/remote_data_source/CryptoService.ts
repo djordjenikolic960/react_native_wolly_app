@@ -1,6 +1,6 @@
-import {API_ENDPOINTS} from '../../../../api/ApiEndpoints';
-import {apiClient} from '../../../../api/ApiClient';
-import {Cryptocurrency} from '../../domain/model/Cryptocurrency';
+import {apiClient} from '../../../../../api/ApiClient';
+import {API_ENDPOINTS} from '../../../../../api/ApiEndpoints';
+import {Cryptocurrency} from '../../../domain/model/Cryptocurrency';
 
 export class CryptoService {
   async fetchCryptos(): Promise<Array<Cryptocurrency>> {
