@@ -2,16 +2,12 @@ import {FlatList, SafeAreaView, Text, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../../../../navigation/Types';
-import {Cryptocurrency} from '../../domain/model/Cryptocurrency';
 import {styles} from '../styles';
 import useCryptoMarketListStore from '../store/CryptoMarketListStore';
 import CryptoListItem from '../components/CryptoListItem';
+import LoadingView from '../../../../components/loading/LoadingView';
 
 type CryptoListNavigationProps = NavigationProp<RootStackParamList, 'Tabs'>;
-
-type ItemProps = Cryptocurrency & {
-  onPress: () => void;
-};
 
 const CryptoMarketListScreen = () => {
   const {cryptos, loading, fetchCryptoCurrencies} = useCryptoMarketListStore();
@@ -44,6 +40,7 @@ const CryptoMarketListScreen = () => {
           keyExtractor={item => item.id}
         />
       </View>
+      {loading ? <LoadingView /> : <></>}
     </SafeAreaView>
   );
 };

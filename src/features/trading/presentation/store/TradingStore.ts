@@ -1,11 +1,11 @@
 import {create} from 'zustand';
 import {BaseError} from '../../../../errors/BaseError';
 import {Cryptocurrency} from '../../../crypto_market_list/domain/model/Cryptocurrency';
-import {TradingService} from '../../data/service/TradingService';
-import {TradingRepositoryImpl} from '../../data/repository/TradingRepositoryImpl';
-import {FetchCryptoUseCase} from '../../domain/usecase/FetchCryptoUseCase';
 import TradingOption from '../../domain/model/TradingOption';
-import {CryptocurrencyMapper} from '../../../crypto_market_list/data/mapper/CryptocurrencyMapper';
+import {tradingContainer} from '../../di/TradingDependecyContainer';
+import {dashboardContainer} from '../../../dashboard/di/DashboardDependecyContainer';
+import {isBaseError} from '../../../../utils/ErrorUtils';
+
 type State = {
   loading: boolean;
   error: BaseError | null;
@@ -20,6 +20,11 @@ type Actions = {
   fetchCryptoCurrencie: (id: string) => Promise<void>;
   setTradingOption: (tradingOption: TradingOption) => void;
   setEnteredTradeValue: (value: string) => void;
+  trade: (
+    cryptoId: string,
+    value: number,
+    tradingOption: TradingOption,
+  ) => void;
   reset: () => void;
 };
 
@@ -33,13 +38,12 @@ const initialState: State = {
   enteredTradeValue: '',
 };
 
-const tradingService = new TradingService();
-const cryptocurrencyMapper = new CryptocurrencyMapper();
-const tradingRepository = new TradingRepositoryImpl(
-  tradingService,
-  cryptocurrencyMapper,
-);
-const fetchCryptoUseCase = new FetchCryptoUseCase(tradingRepository);
+const fetchCryptoUseCase = tradingContainer.getFetchCryptoUseCase();
+const fetchCurrentAmountOfCryptoUseCase =
+  tradingContainer.getFetchCurrentAmountOfCryptoUseCase();
+const tradeCryptoUseCase = tradingContainer.getTradeCryptoUseCase();
+
+const fetchWalletUseCase = dashboardContainer.getFetchWalletUseCase();
 
 const useTradingStore = create<State & Actions>(set => ({
   ...initialState,
@@ -61,18 +65,38 @@ const useTradingStore = create<State & Actions>(set => ({
     set({loading: true, error: null});
     try {
       const crypto = await fetchCryptoUseCase.execute(id);
-      /* const walletResponse = await fetchCryptoUseCase();
-      const userCryptos = transformWalletResponse(walletResponse);
-
-      const currentUserValue = await getCurrentAmountOfCryptocurrency(
-        crypto.name,
-      ); */
+      const wallet = await fetchWalletUseCase.execute();
+      const currentUserValue = fetchCurrentAmountOfCryptoUseCase.execute(
+        crypto,
+        wallet.cryptocurrencies,
+      );
       set({
         selectedCrypto: crypto,
         loading: false,
+        currentUserValue: currentUserValue,
       });
     } catch (error) {
-      throw new Error();
+    } finally {
+      set({loading: false});
+    }
+  },
+  trade: async (
+    cryptoId: string,
+    value: number,
+    tradingOption: TradingOption,
+  ) => {
+    set({loading: true, error: null});
+    try {
+      const {fetchCryptoCurrencie} = useTradingStore.getState();
+      await tradeCryptoUseCase.execute(cryptoId, value, tradingOption);
+      await fetchCryptoCurrencie(cryptoId);
+    } catch (error) {
+      console.log(error);
+      if (isBaseError(error)) {
+        set({error});
+      } else {
+        set({loading: false});
+      }
     } finally {
       set({loading: false});
     }

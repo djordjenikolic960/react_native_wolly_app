@@ -1,12 +1,12 @@
 import React from 'react';
 import DashboardScreen from '../features/dashboard/presentation/screens/DashboardScreen';
-import ProfileScreen from '../features/profile/Profile';
-import SettingsScreen from '../features/settings/Settings';
+import SettingsScreen from '../features/settings/screens/Settings';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import BottomNavigationIcon from '../components/BottomNavigationIcon';
 import {Images} from '../assets';
 import {useTheme} from '../theme/ThemeProvider';
 import CryptoMarketListScreen from '../features/crypto_market_list/presentation/screens/CryptoMarketListScreen';
+import UserInfoScreen from '../features/user/presentation/screens/UserInfoScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -54,8 +54,8 @@ const BottomTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
+        name="UserInfo"
+        component={UserInfoScreen}
         options={{
           tabBarIcon: ({color, focused}) => (
             <BottomNavigationIcon icon={Images.icons.profile} color={color} />

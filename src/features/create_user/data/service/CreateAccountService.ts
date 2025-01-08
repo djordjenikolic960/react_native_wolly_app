@@ -1,4 +1,5 @@
 import {apiClient} from '../../../../api/ApiClient';
+import {API_ENDPOINTS} from '../../../../api/ApiEndpoints';
 import {User} from '../../domain/model/User';
 
 class CreateAccountService {
@@ -12,7 +13,7 @@ class CreateAccountService {
       const response = await apiClient.post<
         {email: string; password: string; firstName: string; lastName: string},
         User
-      >('api/v1/users/register', {
+      >(API_ENDPOINTS.REGISTER, {
         email,
         password,
         firstName,
@@ -34,4 +35,4 @@ class CreateAccountService {
   }
 }
 
-export const createAccountse = new CreateAccountService();
+export const createAccountService = new CreateAccountService();
