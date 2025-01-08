@@ -59,9 +59,18 @@ class ApiClient {
   }
 
   // PATCH method
-  async patch<T, R>(endpoint: string, data: T): Promise<R> {
-    const response = await this.client.patch(endpoint, data);
-    return response.data;
+  async patch<T, R>(
+    endpoint: string,
+    data?: T,
+    config?: AxiosRequestConfig,
+  ): Promise<R> {
+    try {
+      const response = await this.client.patch(endpoint, data, config);
+      return response.data;
+    } catch (error) {
+      console.error('API Patch Error:', error);
+      throw error; // Throw the original error for better debugging
+    }
   }
 }
 

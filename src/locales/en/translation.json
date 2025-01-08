@@ -1,0 +1,9 @@
+{
+    "trading_dialog_title": "Are you sure that you want to {{tradingOption}} for price of {{value}}",
+    "buy": "buy",
+    "sell": "sell",
+    "positive_button": "Confirm",
+    "negative_button": "Cancel",
+    "add_to_credit_card_title": "Are you sure that you wanth to add {{value}} on your credit card",
+    "submit_button":"Submit"
+}    

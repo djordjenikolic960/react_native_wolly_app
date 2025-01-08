@@ -10,28 +10,45 @@ import CustomButton from '../../../../components/custom_button/CustomButton';
 import TradingOptionComponent from '../components/TradingOptionComponent';
 import InfoComponent from '../components/InfoComponent';
 import TradingOption from '../../domain/model/TradingOption';
+import {formatCurrency} from '../../../../utils/CurrencyUtil';
+import createAlertDialog from '../../../../components/dialog/AlertDialog';
+import {useTranslation} from 'react-i18next';
+import Snackbar from 'react-native-snackbar';
 
 type TradingScreenRouteProp = RouteProp<RootStackParamList, 'Trading'>;
 
 const TradingScreen = ({route}: {route: TradingScreenRouteProp}) => {
   const {id} = route.params;
+  const {t} = useTranslation();
+
   const {
     selectedCrypto,
     loading,
     currentUserValue,
     tradeValue,
+    error,
     enteredTradeValue,
     tradingOption,
     fetchCryptoCurrencie,
     setTradingOption,
     setEnteredTradeValue,
     reset,
+    trade,
   } = useTradingStore();
 
   useEffect(() => {
     reset();
     fetchCryptoCurrencie(id);
   }, []);
+
+  useEffect(() => {
+    if (error) {
+      Snackbar.show({
+        text: `Error: ${error.type} - ${error.error}`,
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    }
+  }, [error]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -45,10 +62,11 @@ const TradingScreen = ({route}: {route: TradingScreenRouteProp}) => {
             source={{uri: selectedCrypto?.icon}}
             style={{height: 110, width: 110}}
           />
-          <Text
-            style={
-              styles.header
-            }>{`$ ${selectedCrypto?.valueOfOne.toString()}`}</Text>
+          <Text style={styles.header}>
+            {selectedCrypto?.valueOfOne
+              ? formatCurrency(selectedCrypto!.valueOfOne)
+              : ''}
+          </Text>
           <Text
             style={
               styles.subtitle
@@ -105,7 +123,31 @@ const TradingScreen = ({route}: {route: TradingScreenRouteProp}) => {
               alignItems: 'center',
               marginTop: 'auto',
             }}>
-            <CustomButton label="Submit" onClick={() => {}} />
+            <CustomButton
+              label="Submit"
+              onClick={() => {
+                createAlertDialog({
+                  title: t('trading_dialog_title', {
+                    tradingOption:
+                      tradingOption === TradingOption.Buy
+                        ? t('buy')
+                        : t('sell'),
+                    value: tradeValue + ' USD',
+                  }),
+                  subtitle: '',
+                  positiveButtonText: t('positive_button'),
+                  negativeButtonText: t('negative_button'),
+                  onPositiveButtonPressed: () => {
+                    trade(
+                      selectedCrypto?.id!,
+                      Number(enteredTradeValue) * selectedCrypto!.valueOfOne,
+                      tradingOption,
+                    );
+                  },
+                  onNegativeButtonPressed: () => {},
+                });
+              }}
+            />
           </View>
         </View>
       </View>

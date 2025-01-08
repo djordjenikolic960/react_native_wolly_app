@@ -1,4 +1,5 @@
 import {apiClient} from '../../../../api/ApiClient';
+import {API_ENDPOINTS} from '../../../../api/ApiEndpoints';
 import {AuthToken} from '../../domain/model/AuthToken';
 
 class LoginService {
@@ -7,7 +8,7 @@ class LoginService {
       const response = await apiClient.post<
         {email: string; password: string},
         {jwtToken: string}
-      >('/api/v1/users/login', {email, password});
+      >(API_ENDPOINTS.LOGIN, {email, password});
 
       return {token: response.jwtToken};
     } catch (e) {
