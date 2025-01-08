@@ -1,24 +1,30 @@
 import {Cryptocurrency} from '../../domain/model/Cryptocurrency';
 import {CryptoRepository} from '../../domain/repository/CryptoRepository';
+import {CryptoDatabaseService} from '../data_source/local_data_source/CryptoDatabaseService';
+import {CryptoService} from '../data_source/remote_data_source/CryptoService';
 import {CryptocurrencyMapper} from '../mapper/CryptocurrencyMapper';
-import {CryptoService} from '../service/CryptoService';
 
 export class CryptoRepositoryImpl implements CryptoRepository {
-  private cryptoService: CryptoService;
+  private remoteDataSource: CryptoService;
+  private localDataSource: CryptoDatabaseService;
   private cryptoMapper: CryptocurrencyMapper;
 
   constructor(
     cryptoService: CryptoService,
+    databaseService: CryptoDatabaseService,
     cryptoMapper: CryptocurrencyMapper,
   ) {
-    this.cryptoService = cryptoService;
+    this.remoteDataSource = cryptoService;
+    this.localDataSource = databaseService;
     this.cryptoMapper = cryptoMapper;
   }
 
   async fetchCryptos(): Promise<Array<Cryptocurrency>> {
     try {
-      const response = await this.cryptoService.fetchCryptos();
-      return this.cryptoMapper.responseToModel(response);
+      const apiResponse = await this.remoteDataSource.fetchCryptos();
+      await this.localDataSource.saveCryptos(apiResponse);
+      const databaseResponse = await this.localDataSource.getCryptos();
+      return databaseResponse;
     } catch (error) {
       throw new Error('Error fetching cryptos');
     }

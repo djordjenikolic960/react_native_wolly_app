@@ -4,7 +4,6 @@ export class CryptocurrencyMapper {
   responseToModel(cryptos: Array<Cryptocurrency>): Array<Cryptocurrency> {
     return cryptos.map((crypto: Cryptocurrency) => this.toModel(crypto));
   }
-
   toModel(crypto: Cryptocurrency): Cryptocurrency {
     return {
       id: crypto.id,
